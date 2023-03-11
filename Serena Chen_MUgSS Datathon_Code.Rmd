@@ -1,0 +1,83 @@
+---
+title: "datathonw21"
+author: "Sirui Chen"
+date: "2023-03-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(readr)
+df <- read_csv("Documents/umich/22 winter/data/datathonW23/mxmh_survey_results.csv")
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+library(tidyverse)
+library(tidyr)
+
+genre <- df %>% 
+  group_by(`Fav genre`)
+
+summary_data <- genre %>% 
+                summarize(Anxiety)
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+library(ggplot2)
+
+# Assume "my_data" is the original data frame that contains the "song_type"
+# and "anxiety" columns.
+# We can use the "ggplot()" function to create a new plot.
+plot <- ggplot(genre, aes(x = `Fav genre`, y = Anxiety))
+
+# We then add a boxplot layer using the "geom_boxplot()" function.
+plot + geom_boxplot()
+
+```
+```{r}
+
+mod1 = lm(Anxiety ~`Fav genre`+ Age , data= df )
+```
+
+```{r}
+df$Average <- rowMeans(df[,c("Anxiety", "Depression", "Insomnia", "OCD")])
+mod5 = lm(Average ~`Fav genre`+ Age , data= df )
+```
+
+```{r}
+mod2 = lm(Depression ~`Fav genre`+ Age , data= df )
+```
+
+```{r}
+mod3 = lm(Insomnia ~`Fav genre`+ Age , data= df )
+```
+
+```{r}
+mod4 = lm(OCD ~`Fav genre`+ Age , data= df )
+```
+
+```{r}
+install.packages("stargazer")
+library(stargazer)
+stargazer(mod1, mod2, mod3, mod4, mod5)
+
+```
+
